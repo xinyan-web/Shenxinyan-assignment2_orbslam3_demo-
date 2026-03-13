@@ -1,7 +1,15 @@
 # AAE5303 Assignment 2  
 ## Visual Odometry with ORB-SLAM3
-# 一级标题（最大）
-## 二级标题
+
+
+1 Introduction
+2 Experimental Setup
+3 Methodology
+4 Results
+5 Visualization
+6 Difficulties
+7 Recommendations
+8 References
 
 ---
 
@@ -61,13 +69,16 @@ ORB-SLAM3 processes monocular images and estimates the camera trajectory.
 
 Command used:
 
+
 ```bash
 ./Examples_old/ROS/ORB_SLAM3/Mono_Compressed \
 Vocabulary/ORBvoc.txt \
 Examples/Monocular/HKisland_fix.yaml
+
 This generates:
 CameraTrajectory.txt
 KeyFrameTrajectory.txt
+
 
 Step 2: Extract Ground Truth
 Ground truth trajectory is extracted from the ROS bag file using RTK GPS data.
