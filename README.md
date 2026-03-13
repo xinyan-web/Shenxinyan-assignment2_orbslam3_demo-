@@ -2,10 +2,7 @@
 ## Visual Odometry with ORB-SLAM3
 # 一级标题（最大）
 ## 二级标题
-### 三级标题
-#### 四级标题
-##### 五级标题
-###### 六级标题（最小）
+
 ---
 
 # 1. Introduction
@@ -103,32 +100,42 @@ evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
 
 # 4. Results
 
-Absolute Trajectory Error (ATE)
-| Metric | Value          |
-| ------ | -------------- |
-| Max    | 16.552112 m    |
-| Mean   | 1.786148 m     |
-| Median | 1.355826 m     |
-| Min    | 0.144398 m     |
-| RMSE   | **2.577282 m** |
-| Std    | 1.857972 m     |
-| SSE    | 7539.106151    |
+## Absolute Trajectory Error (ATE)
 
-Sim(3) Alignment
+| Metric | Value |
+|------|------|
+| Max | 16.552112 m |
+| Mean | 1.786148 m |
+| Median | 1.355826 m |
+| Min | 0.144398 m |
+| RMSE | **2.577282 m** |
+| Std | 1.857972 m |
+| SSE | 7539.106151 |
 
-Trajectory alignment was performed using Sim(3) transformation.
-| Parameter             | Value                     |
-| --------------------- | ------------------------- |
-| Scale correction      | **1.8836**                |
-| Translation           | [-0.5667, 1.3446, 0.7044] |
-| Association threshold | **0.1 s**                 |
-Completeness
-Parameter
-| Parameter          | Value       |
-| ------------------ | ----------- |
-| Matched poses      | 540         |
-| Ground truth poses | 1955        |
-| Completeness       | **27.62 %** |
+---
+
+## Sim(3) Alignment
+
+Trajectory alignment was performed using **Sim(3) transformation**.
+
+| Parameter | Value |
+|------|------|
+| Scale correction | **1.8836** |
+| Translation | [-0.5667, 1.3446, 0.7044] |
+| Association threshold | **0.1 s** |
+
+---
+
+## Completeness
+
+| Parameter | Value |
+|------|------|
+| Matched poses | 540 |
+| Ground truth poses | 1955 |
+| Completeness | **27.62 %** |
+
+Formula:
+
 Completeness = matched poses / ground truth poses × 100%
              = 540 / 1955 × 100%
              = 27.62 %
