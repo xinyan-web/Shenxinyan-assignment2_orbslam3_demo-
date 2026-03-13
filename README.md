@@ -69,8 +69,8 @@ Examples/Monocular/HKisland_fix.yaml
 
 ---
 
-**4. Results**
-Absolute Trajectory Error (ATE)
+# 4. Results
+**Absolute Trajectory Error (ATE)**.
 Metric	Value
 Max	16.552112 m
 Mean	1.786148 m
