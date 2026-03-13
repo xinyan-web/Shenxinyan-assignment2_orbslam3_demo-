@@ -108,9 +108,7 @@ evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
 
 ---
 
-# 4. Results
-
-
+4. Results
 Absolute Trajectory Error (ATE)
 | Metric | Value          |
 | ------ | -------------- |
