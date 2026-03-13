@@ -40,7 +40,7 @@ Dataset characteristics:
 
 ---
 
-### System Environment
+## System Environment
 
 | Component | Description |
 |--------|--------|
@@ -112,7 +112,6 @@ evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
 | Std | 1.857972 m |
 | SSE | 7539.106151 |
 
----
 
 ## Sim(3) Alignment
 
@@ -124,7 +123,6 @@ Trajectory alignment was performed using **Sim(3) transformation**.
 | Translation | [-0.5667, 1.3446, 0.7044] |
 | Association threshold | **0.1 s** |
 
----
 
 ## Completeness
 
@@ -134,39 +132,37 @@ Trajectory alignment was performed using **Sim(3) transformation**.
 | Ground truth poses | 1955 |
 | Completeness | **27.62 %** |
 
-Formula:
+Completeness calculation:
 
-Completeness = matched poses / ground truth poses × 100%
-             = 540 / 1955 × 100%
-             = 27.62 %
-Estimated Poses
-| Metric          | Value    |
-| --------------- | -------- |
+Completeness = 540 / 1955 × 100% = **27.62 %**
+
+
+## Estimated Poses
+
+| Metric | Value |
+|------|------|
 | Estimated poses | **1157** |
-These poses are obtained from：
-CameraTrajectory_sec.txt
+
+These poses are obtained from:
+
+`CameraTrajectory_sec.txt`
 
 
 # 5. Visualization
 
-ORB-SLAM3 Runtime Visualization
+## ORB-SLAM3 Runtime Visualization
 
 This figure shows the ORB-SLAM3 runtime interface including the map viewer and feature tracking.
-Trajectory Evaluation
-
-The following figure shows the trajectory comparison between:
-
-Ground truth trajectory
-
-Estimated ORB-SLAM3 trajectory
-
-ATE error distribution
-
-Error along the trajectory
 
 ![ORB-SLAM3 Frame](frame.png)
+
+
+## Trajectory Evaluation
+
+The following figure shows the trajectory comparison between ground truth and the estimated trajectory.
+
 ![Trajectory Evaluation](trajectory_evaluation.png)
----
+
 
 # 6. Difficulties Encountered
 
@@ -181,29 +177,20 @@ Additionally, the Cursor development environment recommended in the assignment c
 Because of these environment limitations, the experiment workflow became somewhat disorganized, and the final trajectory overlap with the ground truth was lower than expected.
 
 
----
-
 # 7. Recommendations for Improvement
 
 Several improvements could potentially enhance the performance:
 
-Increase ORB feature extraction number
-
-Reduce FAST threshold for better feature detection
-
-Use slower rosbag playback speed
-
-Integrate IMU measurements
-
-Run experiments in a more stable development environment
+- Increase ORB feature extraction number  
+- Reduce FAST threshold for better feature detection  
+- Use slower rosbag playback speed  
+- Integrate IMU measurements  
+- Run experiments in a more stable development environment
 
 Future work could further optimize SLAM parameters and improve tracking robustness.
 
----
 
 # 8. References
 
-ORB-SLAM3
+ORB-SLAM3  
 https://github.com/UZ-SLAMLab/ORB_SLAM3
-
-https://github.com/uzh-rpg/evo
