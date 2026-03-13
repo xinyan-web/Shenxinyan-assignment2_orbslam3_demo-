@@ -1,287 +1,185 @@
-AAE5303 Assignment 2: Visual Odometry with ORB-SLAM3
-Overview
+# AAE5303 Assignment 2  
+## Visual Odometry with ORB-SLAM3
 
-This project evaluates the performance of monocular visual odometry using ORB-SLAM3 on the HKisland_GNSS03 dataset. The objective is to estimate the camera trajectory from monocular images and compare it to the RTK GPS ground truth.
+---
 
-The key evaluation metrics include:
+# 1. Introduction
 
+This project evaluates **monocular visual odometry** using **ORB-SLAM3** on the **HKisland dataset**.  
+The objective is to estimate the camera trajectory from monocular images and compare the estimated trajectory with **RTK GPS ground truth**.
+
+The performance is evaluated using:
+
+- Absolute Trajectory Error (ATE)
+- Relative Pose Error (RPE)
+- Sim(3) trajectory alignment
+- Completeness (association rate)
+
+The evaluation is performed using the **evo trajectory evaluation toolkit**.
+
+---
+
+# 2. Experimental Setup
+
+### Dataset
+
+Dataset used:
+HKisland_GNSS03.bag
+
+Dataset characteristics:
+
+| Parameter | Value |
+|--------|--------|
+| Sensor | Monocular Camera |
+| Resolution | 2448 × 2048 |
+| Frame Rate | 10 Hz |
+| Duration | ~390 seconds |
+| Ground Truth | RTK GPS |
+
+---
+
+### System Environment
+
+| Component | Description |
+|--------|--------|
+| OS | Ubuntu (Virtual Machine) |
+| SLAM System | ORB-SLAM3 |
+| Evaluation Tool | evo |
+| Programming Language | Python |
+
+---
+
+# 3. Methodology
+
+The experiment follows these steps:
+
+### Step 1: Run ORB-SLAM3
+
+ORB-SLAM3 processes monocular images and estimates the camera trajectory.
+
+Command used:
+
+```bash
+./Examples_old/ROS/ORB_SLAM3/Mono_Compressed \
+Vocabulary/ORBvoc.txt \
+Examples/Monocular/HKisland_fix.yaml
+This generates:
+CameraTrajectory.txt
+KeyFrameTrajectory.txt
+
+Step 2: Extract Ground Truth
+Ground truth trajectory is extracted from the ROS bag file using RTK GPS data.
+
+Python script used:
+import rosbag
+import numpy as np
+
+bag = rosbag.Bag('data/HKisland_GNSS03.bag')
+
+rtk_data = []
+
+for topic, msg, t in bag.read_messages(topics=['/dji_osdk_ros/rtk_position']):
+    timestamp = msg.header.stamp.to_sec()
+    lat, lon, alt = msg.latitude, msg.longitude, msg.altitude
+    rtk_data.append([timestamp, lat, lon, alt])
+
+bag.close()
+The GPS coordinates are converted into local ENU coordinates and saved as:
+ground_truth.txt
+
+Step 3: Trajectory Evaluation
+
+Trajectory alignment and error analysis are performed using the evo toolkit.
+
+Command used:
+evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
+-va --align --correct_scale --t_max_diff 0.1 --plot --plot_mode xy
+4. Results
 Absolute Trajectory Error (ATE)
-
-Relative Pose Error (RPE)
-
-Sim(3) Scale Correction and Translation
-
-Completeness
-
-Estimated Poses
-
-1. Data and Setup
-1.1 Data
-
-The data used in this assignment comes from the HKisland_GNSS03 dataset. The following files are required for the evaluation:
-
-ground_truth.txt (RTK GPS ground truth)
-
-CameraTrajectory.txt (Estimated trajectory from monocular SLAM)
-
-1.2 Dependencies
-
-To run the evaluation, you need the following:
-
-Python 3
-pip install numpy
-pip install evo
-
-ORB-SLAM3 installed and set up (for monocular visual odometry).
-
-2. Execution
-2.1 Running the Evaluation
-
-To evaluate the performance of ORB-SLAM3, use the following code. It computes key metrics like Absolute Trajectory Error (ATE), Relative Pose Error (RPE), and Completeness.
-
-python3 evaluate_with_evo.py --groundtruth ground_truth.txt --estimated CameraTrajectory.txt --t-max-diff 0.1 --delta-m 10 --workdir evaluation_results --json-out evaluation_report.json
-2.2 Output Metrics
-
-After running the above command, the following metrics will be printed:
-
-Absolute Trajectory Error (ATE)
-
-RMSE: 2.577282 m
-
-Mean: 1.786148 m
-
-Median: 1.355826 m
-
-Min: 0.144398 m
-
-Max: 16.552112 m
-
-Std Dev: 1.857972 m
-
-SSE: 7539.106151 m
-
-Relative Pose Error (RPE)
-The translation drift and rotational drift over distance for each frame.
+| Metric | Value          |
+| ------ | -------------- |
+| Max    | 16.552112 m    |
+| Mean   | 1.786148 m     |
+| Median | 1.355826 m     |
+| Min    | 0.144398 m     |
+| RMSE   | **2.577282 m** |
+| Std    | 1.857972 m     |
+| SSE    | 7539.106151    |
 
 Sim(3) Alignment
 
-Scale Correction: 1.8836
+Trajectory alignment was performed using Sim(3) transformation.
+| Parameter             | Value                     |
+| --------------------- | ------------------------- |
+| Scale correction      | **1.8836**                |
+| Translation           | [-0.5667, 1.3446, 0.7044] |
+| Association threshold | **0.1 s**                 |
+Completeness
+Parameter
+| Parameter          | Value       |
+| ------------------ | ----------- |
+| Matched poses      | 540         |
+| Ground truth poses | 1955        |
+| Completeness       | **27.62 %** |
+Completeness = matched poses / ground truth poses × 100%
+             = 540 / 1955 × 100%
+             = 27.62 %
+Estimated Poses
+| Metric          | Value    |
+| --------------- | -------- |
+| Estimated poses | **1157** |
+These poses are obtained from：
+CameraTrajectory_sec.txt
 
-Translation: [-0.5667, 1.3446, 0.7044]
+5. Visualization
+ORB-SLAM3 Runtime Visualization
 
-2.3 Completeness
+This figure shows the ORB-SLAM3 runtime interface including the map viewer and feature tracking.
+Trajectory Evaluation
 
-Completeness:
-540 / 1955 × 100% ≈ 27.62%
+The following figure shows the trajectory comparison between:
 
-This indicates that 540 poses were successfully matched from the RTK ground truth to the SLAM estimated trajectory, which is around 27.62% of the total poses.
+Ground truth trajectory
 
-3. Evaluation Metrics
-3.1 Absolute Trajectory Error (ATE)
+Estimated ORB-SLAM3 trajectory
 
-ATE measures the global alignment between the estimated trajectory and the ground truth. A lower value means better global alignment.
+ATE error distribution
 
-Max ATE: 16.552112 m
+Error along the trajectory
 
-Mean ATE: 1.786148 m
+![ORB-SLAM3 Frame](frame.png)
+![Trajectory Evaluation](trajectory_evaluation.png)
+6. Difficulties Encountered
 
-RMSE: 2.577282 m
+During the experiment, several technical difficulties were encountered.
 
-Std Dev: 1.857972 m
+Due to system compatibility issues on the host computer, pulling the required Docker image using PowerShell repeatedly failed. As a result, the SLAM environment could not be deployed directly on the host system.
 
-3.2 Relative Pose Error (RPE)
+To solve this issue, the entire experiment was eventually executed inside a Linux virtual machine, which allowed the Docker container and ORB-SLAM3 environment to run successfully.
 
-RPE evaluates the local consistency of the estimated trajectory by comparing the poses of consecutive frames.
+Additionally, the Cursor development environment recommended in the assignment could not be used, and most operations had to be performed manually through the terminal.
 
-RPE Trans Drift: 1.786148 m
+Because of these environment limitations, the experiment workflow became somewhat disorganized, and the final trajectory overlap with the ground truth was lower than expected.
 
-RPE Rot Drift: 0.144398 degrees per 100 meters
+7. Recommendations for Improvement
 
-3.3 Sim(3) Alignment
+Several improvements could potentially enhance the performance:
 
-The alignment is performed using Sim(3) transformation with scale correction.
+Increase ORB feature extraction number
 
-Scale Correction: 1.8836
+Reduce FAST threshold for better feature detection
 
-Translation Vector: [-0.5667, 1.3446, 0.7044]
+Use slower rosbag playback speed
 
-3.4 Completeness
+Integrate IMU measurements
 
-Completeness represents how well the ground truth and estimated trajectories were synchronized.
+Run experiments in a more stable development environment
 
-Matched Poses: 540
+Future work could further optimize SLAM parameters and improve tracking robustness.
 
-Total Ground Truth Poses: 1955
+8. References
 
-Completeness: 27.62%
+ORB-SLAM3
+https://github.com/UZ-SLAMLab/ORB_SLAM3
 
-4. Results Summary
-
-The evaluation showed that while the Absolute Trajectory Error (ATE) was within a good range (RMSE: 2.58 m), the Relative Pose Error (RPE) showed significant drift due to frequent tracking losses. The Completeness was around 27.62%, indicating room for improvement in pose matching.
-
-Sim(3) alignment yielded a scale correction of 1.8836 and a translation shift of [-0.5667, 1.3446, 0.7044].
-
-5. Conclusion
-
-The performance of the monocular visual odometry system is moderate. While the global alignment (ATE) is good, the local accuracy (RPE) needs improvement, especially due to frequent tracking loss.
-
-Future improvements could include:
-
-Improving tracking robustness (reduce drift by increasing ORB features or adding IMU data).
-
-Enhancing the feature extraction (lowering FAST threshold or increasing features per image).
-
-Refining initialization quality to improve scale accuracy.
-
-6. Code
-# Code to compute ATE, RPE, and Completeness
-def evaluate_with_evo(
-    gt_path: str,
-    est_path: str,
-    t_max_diff_s: float,
-    delta_m: float,
-    workdir: str,
-):
-    # Code here to run evo_ape and evo_rpe, then extract and return metrics
-    pass
-7. References
-
-ORB-SLAM3: https://github.com/UZ-SLAMLab/ORB_SLAM3
-evo: https://github.com/uzh-rpg/evo
-MARS-LVIG Dataset: https://mars.hku.hk/dataset.html
-
-
-
-## 🎯 Conclusions
-
-In this assignment, monocular visual odometry was implemented using **ORB-SLAM3** on the HKisland dataset.  
-The estimated trajectory was evaluated against the RTK GPS ground truth using the **evo evaluation toolkit**.
-
-The evaluation results show that the system achieved a reasonable level of accuracy in terms of **Absolute Trajectory Error (ATE)**, with an RMSE of **2.58 m**, which is acceptable for outdoor visual odometry scenarios.  
-However, the **trajectory overlap with the ground truth is relatively low**, and the **completeness rate is only 27.62%**, indicating that tracking was frequently lost during the sequence.
-
-Overall, the experiment demonstrates that ORB-SLAM3 can estimate the trajectory with moderate accuracy, but the robustness of tracking could be further improved.
-
----
-
-## ⚠️ Difficulties Encountered
-
-During the implementation process, several technical issues were encountered.
-
-First, due to **system compatibility issues on the host computer**, pulling the required Docker image using **PowerShell** repeatedly failed. As a result, the experiment could not be completed directly on the host environment.
-
-To solve this issue, the entire experiment was eventually executed inside a **Linux virtual machine**, which allowed the Docker container and ORB-SLAM3 environment to run successfully.
-
-Additionally, because of these environment issues, the **Cursor development environment recommended in the assignment could not be used**, and most operations had to be performed manually through the terminal. This increased the complexity of debugging and experiment management.
-
-As a consequence, the trajectory alignment and visualization process became somewhat disorganized, and the final trajectory overlap with the ground truth was lower than expected.
-
----
-
-## 🔧 Recommendations for Improvement
-
-Several improvements could potentially enhance the performance of the system:
-
-- **Improve tracking robustness** by increasing the number of ORB features extracted per frame.
-- **Lower the FAST threshold** to detect more features in challenging frames.
-- **Reduce rosbag playback speed** to allow the SLAM system more time for feature tracking.
-- Incorporate **IMU measurements** to improve scale estimation and reduce drift.
-- Run experiments directly in a more stable development environment (such as the recommended Cursor setup) to simplify workflow management.
-
-Future work could also include tuning camera parameters and experimenting with different SLAM configurations to further improve trajectory accuracy and completeness.
-
-## 📎 Appendix
-
-### A. Repository Structure
-
-```
-AAE5303_assignment2_orbslam3_demo-/
-├── README.md                    # This report
-├── requirements.txt             # Python dependencies
-├── figures/
-│   └── trajectory_evaluation.png
-├── output/
-│   └── evaluation_report.json
-├── scripts/
-│   └── evaluate_vo_accuracy.py
-├── docs/
-│   └── camera_config.yaml
-└── leaderboard/
-    ├── README.md
-    ├── LEADERBOARD_SUBMISSION_GUIDE.md
-    └── submission_template.json
-```
-
-### B. Running Commands
-
-```bash
-# 1. Extract images from ROS bag
-python3 extract_images_final.py HKisland_GNSS03.bag --output extracted_data
-
-# 2. Run ORB-SLAM3 VO
-./Examples/Monocular/mono_tum \
-    Vocabulary/ORBvoc.txt \
-    Examples/Monocular/DJI_Camera.yaml \
-    data/extracted_data
-
-# 3. Extract RTK ground truth
-python3 extract_rtk_groundtruth.py HKisland_GNSS03.bag --output ground_truth.txt
-
-# 4. Evaluate trajectory
-python3 scripts/evaluate_vo_accuracy.py \
-    --groundtruth ground_truth.txt \
-    --estimated CameraTrajectory.txt \
-    --t-max-diff 0.1 \
-    --delta-m 10 \
-    --workdir evaluation_results \
-    --json-out evaluation_results/metrics.json
-```
-
-### D. Native evo Commands (Recommended)
-
-If you prefer to run evo directly (no custom scripts), use:
-
-```bash
-# ATE (Sim(3) alignment + scale correction)
-evo_ape tum ground_truth.txt CameraTrajectory.txt \
-  --align --correct_scale \
-  --t_max_diff 0.1 -va
-
-# RPE translation (distance-based, delta = 10 m)
-evo_rpe tum ground_truth.txt CameraTrajectory.txt \
-  --align --correct_scale \
-  --t_max_diff 0.1 \
-  --delta 10 --delta_unit m \
-  --pose_relation trans_part -va
-
-# RPE rotation angle (degrees, distance-based, delta = 10 m)
-evo_rpe tum ground_truth.txt CameraTrajectory.txt \
-  --align --correct_scale \
-  --t_max_diff 0.1 \
-  --delta 10 --delta_unit m \
-  --pose_relation angle_deg -va
-```
-
-### C. Output Trajectory Format (TUM)
-
-```
-# timestamp x y z qx qy qz qw
-1698132964.499888 0.0000000 0.0000000 0.0000000 -0.0000000 -0.0000000 -0.0000000 1.0000000
-1698132964.599976 -0.0198950 0.0163751 -0.0965251 -0.0048082 0.0122335 0.0013237 0.9999127
-...
-```
-
----
-
-<div align="center">
-
-**AAE5303 - Robust Control Technology in Low-Altitude Aerial Vehicle**
-
-*Department of Aeronautical and Aviation Engineering*
-
-*The Hong Kong Polytechnic University*
-
-Jan 2026
-
-</div>
-
+https://github.com/uzh-rpg/evo
