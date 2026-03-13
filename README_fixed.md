@@ -178,7 +178,8 @@ CameraTrajectory_sec.txt
 
 This figure shows the ORB-SLAM3 runtime interface including the map viewer and feature tracking.
 
-![ORB-SLAM3 Frame](frame.png)
+<img width="731" height="485" alt="image" src="https://github.com/user-attachments/assets/7dfcdd24-b22c-4afb-bb4c-373b3006385b" />
+
 
 ---
 
@@ -186,7 +187,8 @@ This figure shows the ORB-SLAM3 runtime interface including the map viewer and f
 
 The following figure shows the comparison between the estimated trajectory and the ground truth trajectory.
 
-![Trajectory Evaluation](trajectory_evaluation.png)
+<img width="2000" height="2000" alt="trajectory_evaluation" src="https://github.com/user-attachments/assets/deb0acff-4aef-4eea-9476-a5846e37c247" />
+
 
 ---
 
