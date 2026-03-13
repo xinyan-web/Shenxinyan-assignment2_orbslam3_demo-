@@ -105,7 +105,12 @@ Trajectory alignment and error analysis are performed using the evo toolkit.
 Command used:
 evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
 -va --align --correct_scale --t_max_diff 0.1 --plot --plot_mode xy
+
+---
+
 # 4. Results
+
+
 Absolute Trajectory Error (ATE)
 | Metric | Value          |
 | ------ | -------------- |
