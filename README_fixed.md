@@ -131,6 +131,8 @@ evo_ape tum ground_truth.txt CameraTrajectory_sec.txt -va --align --correct_scal
 | RMSE | **2.577282 m** |
 | STD | 1.857972 m |
 | SSE | 7539.106151 |
+<img width="722" height="635" alt="image" src="https://github.com/user-attachments/assets/0087a1a3-f391-481d-a8a0-29cf54052232" />
+
 
 ---
 
