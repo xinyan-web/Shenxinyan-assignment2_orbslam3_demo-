@@ -94,7 +94,10 @@ Trajectory alignment and error analysis are performed using the evo toolkit.
 Command used:
 evo_ape tum ground_truth.txt CameraTrajectory_sec.txt \
 -va --align --correct_scale --t_max_diff 0.1 --plot --plot_mode xy
-4. Results
+---
+
+# 4. Results
+
 Absolute Trajectory Error (ATE)
 | Metric | Value          |
 | ------ | -------------- |
@@ -131,7 +134,9 @@ Estimated Poses
 These poses are obtained from：
 CameraTrajectory_sec.txt
 
-5. Visualization
+
+# 5. Visualization
+
 ORB-SLAM3 Runtime Visualization
 
 This figure shows the ORB-SLAM3 runtime interface including the map viewer and feature tracking.
@@ -149,7 +154,9 @@ Error along the trajectory
 
 ![ORB-SLAM3 Frame](frame.png)
 ![Trajectory Evaluation](trajectory_evaluation.png)
-6. Difficulties Encountered
+---
+
+# 6. Difficulties Encountered
 
 During the experiment, several technical difficulties were encountered.
 
@@ -161,7 +168,10 @@ Additionally, the Cursor development environment recommended in the assignment c
 
 Because of these environment limitations, the experiment workflow became somewhat disorganized, and the final trajectory overlap with the ground truth was lower than expected.
 
-7. Recommendations for Improvement
+
+---
+
+# 7. Recommendations for Improvement
 
 Several improvements could potentially enhance the performance:
 
@@ -177,7 +187,9 @@ Run experiments in a more stable development environment
 
 Future work could further optimize SLAM parameters and improve tracking robustness.
 
-8. References
+---
+
+# 8. References
 
 ORB-SLAM3
 https://github.com/UZ-SLAMLab/ORB_SLAM3
